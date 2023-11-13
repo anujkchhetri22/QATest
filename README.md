@@ -1,9 +1,9 @@
-1.	Install the required packages:
+1. Install the required packages:
 
 npm install --save-dev @types/node @types/cucumber @types/webdriverio cucumber ts-node typescript webdriverio
 
 
-2.	Create a package.json file with the following content:
+2. Create a package.json file with the following content:
 
 
 {
@@ -24,7 +24,7 @@ npm install --save-dev @types/node @types/cucumber @types/webdriverio cucumber t
 
 
 
-3.	Create a tsconfig.json file:
+3. Create a tsconfig.json file:
 
 
 
@@ -37,7 +37,7 @@ npm install --save-dev @types/node @types/cucumber @types/webdriverio cucumber t
 }
 
 
-4.	Create a features folder with a “sample.feature”  file:
+4. Create a features folder with a “sample.feature”  file:
 
 
 
@@ -54,40 +54,54 @@ Feature: Sample Feature
     Then I perform a Checkout
 
 
-5.	Create a step-definitions folder with a sample.steps.ts file:
+5. Create a step-definitions folder with a sample.steps.ts file:
 
 
 
 import { Given, When, Then } from 'cucumber';
-import { browser, $, $$ } from 'webdriverio';
+import { browser, $, $$, expect } from 'webdriverio';
 
 Given('I am on the website', async () => {
   await browser.url('https://magento.softwaretestingboard.com/');
 });
 
 When('I access the Shop', async () => {
-  // Perform actions to access the shop
+  await $('a[href="/shop"]').click();
+  await expect(browser).toHaveUrlContaining('/shop');
 });
 
 When('I filter for a Certain Category', async () => {
-  // Perform actions to filter for a certain category
+  // Assuming the category filter is identified by the CSS selector 'input.category-filter'
+  await $('input.category-filter').setValue('JavaScript');
+  await $('button.category-filter-submit').click();
+  // Add an assertion to check if the category is applied successfully
+  await expect($('span.category-title')).toHaveText('JavaScript');
 });
 
 When('I open the Product Page', async () => {
-  // Perform actions to open the product page
+  // Assuming the product link is identified by the CSS selector 'a.product-link'
+  await $$('a.product-link')[0].click();
+  // Add an assertion to check if the product page is loaded successfully
+  await expect(browser).toHaveUrlContaining('/product');
 });
 
 When('I add multiple quantities of the product to the cart', async () => {
-  // Perform actions to add multiple quantities to the cart
+  // Assuming the quantity input is identified by the CSS selector 'input.quantity'
+  await $('input.quantity').setValue(2);
+  await $('button.add-to-cart').click();
+  // Add an assertion to check if the product is added to the cart successfully
+  await expect($('span.cart-quantity')).toHaveText('2');
 });
 
 Then('I perform a Checkout', async () => {
-  // Perform actions to complete the checkout
+  // Assuming the checkout button is identified by the CSS selector 'button.checkout'
+  await $('button.checkout').click();
+  // Add assertions or further actions to complete the checkout process
+  // For example, you might want to check if the checkout page is loaded
 });
 
 
 6.	Run the test using the command:
 
 npm start
-![image](https://github.com/anujkchhetri22/QATest/assets/150718982/a4171f7b-e31f-440a-a5f4-f47a1feb5101)
 
